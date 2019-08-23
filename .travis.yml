@@ -1,0 +1,14 @@
+#sudo: required
+dist: bionic
+language: python
+python:
+  - "3.7"
+
+jobs:
+  include:
+    - stage: "Code analysis"
+      name: "black"
+      install:
+        - pip install black
+      script:
+       - black --check alphadraughts/
