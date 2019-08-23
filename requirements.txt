@@ -1,0 +1,8 @@
+torch
+torchvision
+tqdm
+black
+precommit
+pytest
+numpy
+matplotlib
