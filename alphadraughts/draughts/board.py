@@ -18,12 +18,10 @@ class Board:
     0 represents no piece, 1 represents white, 2 represents black.
     When displayed, whites are 'O' and blacks are 'X'
     """
-    players = {"white": 1,
-               "black": 2}
 
-    board_to_print = {0: '-',
-                      1: 'O',
-                      2: 'X'}
+    players = {"white": 1, "black": 2}
+
+    board_to_print = {0: "-", 1: "O", 2: "X"}
 
     def __init__(self):
         self._board = np.zeros((8, 8))
@@ -97,9 +95,9 @@ class Board:
             self._board[row, locations] = piece
 
     def __str__(self):
-        board = ''
+        board = ""
         for row in range(8):
             for column in range(8):
                 board += self.board_to_print[self._board[row, column]]
-            board += '\n'
+            board += "\n"
         return board

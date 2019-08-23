@@ -13,26 +13,32 @@ class TestBoard:
         board = Board()
         board.reset()
 
-        expected_board = np.array([[0, 2, 0, 2, 0, 2, 0, 2],
-                                   [2, 0, 2, 0, 2, 0, 2, 0],
-                                   [0, 2, 0, 2, 0, 2, 0, 2],
-                                   [2, 0, 2, 0, 2, 0, 2, 0],
-                                   [0, 1, 0, 1, 0, 1, 0, 1],
-                                   [1, 0, 1, 0, 1, 0, 1, 0],
-                                   [0, 1, 0, 1, 0, 1, 0, 1],
-                                   [1, 0, 1, 0, 1, 0, 1, 0]])
+        expected_board = np.array(
+            [
+                [0, 2, 0, 2, 0, 2, 0, 2],
+                [2, 0, 2, 0, 2, 0, 2, 0],
+                [0, 2, 0, 2, 0, 2, 0, 2],
+                [2, 0, 2, 0, 2, 0, 2, 0],
+                [0, 1, 0, 1, 0, 1, 0, 1],
+                [1, 0, 1, 0, 1, 0, 1, 0],
+                [0, 1, 0, 1, 0, 1, 0, 1],
+                [1, 0, 1, 0, 1, 0, 1, 0],
+            ]
+        )
         assert (board._board == expected_board).all()
 
     def test_board_printout(self):
         board = Board()
         board.reset()
 
-        expected_printout = ("-X-X-X-X\n" 
-                             "X-X-X-X-\n"
-                             "-X-X-X-X\n"
-                             "X-X-X-X-\n"
-                             "-O-O-O-O\n"
-                             "O-O-O-O-\n"
-                             "-O-O-O-O\n"
-                             "O-O-O-O-\n")
+        expected_printout = (
+            "-X-X-X-X\n"
+            "X-X-X-X-\n"
+            "-X-X-X-X\n"
+            "X-X-X-X-\n"
+            "-O-O-O-O\n"
+            "O-O-O-O-\n"
+            "-O-O-O-O\n"
+            "O-O-O-O-\n"
+        )
         assert str(board) == expected_printout
