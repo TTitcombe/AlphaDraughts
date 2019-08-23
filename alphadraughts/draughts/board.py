@@ -26,7 +26,17 @@ class Board:
     def __init__(self):
         self._board = np.zeros((8, 8))
 
-    def validate_move(self, start_index: tuple, end_index: tuple, turn: str) -> bool:
+    def _square_to_board_index(self, square_number: int) -> tuple:
+        row = (square_number - 1) // 4
+        column = (square_number - 1) % 4
+        if row % 2 == 0:
+            column = 2 * column + 1
+        elif row % 2 == 1:
+            column = 2 * column
+        print(square_number, row, column)
+        return row, column
+
+    def validate_move(self, start_index: int, end_index: int, turn: str) -> bool:
         current_move = self.players[turn]
 
         if not self._valid_index(start_index):
@@ -37,11 +47,13 @@ class Board:
             # End index must be on board
             return False
 
-        if self._board[start_index] != current_move:
+        start_board_index = self._square_to_board_index(start_index)
+        if self._board[start_board_index] != current_move:
             # Can only move your own pieces
             return False
 
-        if self._board[end_index] != 0:
+        end_board_index = self._square_to_board_index(end_index)
+        if self._board[end_board_index] != 0:
             # Can't land on an occupied space!
             return False
 
@@ -54,40 +66,92 @@ class Board:
         return True
 
     def _valid_move(self, start_pos: int, end_pos: int) -> bool:
+        """
+        Check that move is of correct direction and distance.
+        Currently assumes all pieces are Men
+        TODO add logic for Kings
+        """
         move_direction = self._get_move_direction(start_pos, end_pos)
-        # TODO check that the piece can move in that direction
-        return False
+        if move_direction == Direction.Invalid:
+            print("invalid")
+            return False
 
-    @staticmethod
-    def _get_move_direction(start_pos: int, end_pos: int) -> Enum:
+        if abs(end_pos - start_pos) > 5:
+            # Then we're trying to take a piece
+            if not self._check_can_take(start_pos, end_pos):
+                return False
+
+        # Check that we're moving in the correct direction
+        piece = self._board[self._square_to_board_index(start_pos)]
         difference = end_pos - start_pos
-        if difference == -7:
+        if piece == 1 and difference > 0:
+            return False
+        elif piece == 2 and difference < 0:
+            return False
+
+        return True
+
+    def _get_move_direction(self, start_pos: int, end_pos: int) -> Enum:
+        difference = end_pos - start_pos
+        if difference in (-3, -7):
             return Direction.NE
-        elif difference == 9:
+        elif difference in (5, 9):
             return Direction.SE
-        elif difference == 7:
+        elif difference in (3, 7):
             return Direction.SW
-        elif difference == -9:
+        elif difference in (-5, -9):
             return Direction.NW
+        elif difference == 4:
+            if start_pos % 2 == 0:
+                return Direction.SE
+            else:
+                return Direction.SW
+        elif difference == -4:
+            if start_pos % 2 == 0:
+                return Direction.NE
+            else:
+                return Direction.NW
         else:
             return Direction.Invalid
 
-    def _valid_index(self, index: tuple) -> bool:
-        for position in index:
-            if position < 0 or position > (self._board.shape[0] - 1):
-                return False
+    def _valid_index(self, index: int) -> bool:
+        if index < 1 or index > 32:
+            return False
         return True
 
-    def move(self, start_index: tuple, end_index: tuple) -> int:
-        # TODO
-        # update the board and remove taken pieces
-        # return the number of pieces removed
-        return 0
+    def _check_can_take(self, start_pos: int, end_pos: int) -> bool:
+        middle_pos = start_pos + int((end_pos - start_pos) / 2)
+        if self._board[start_pos] == self._board[middle_pos]:
+            # If they're the same piece, we can't jump
+            return False
+        if self._board[middle_pos] == 0:
+            # If there isn't a piece in the middle, we can't jump
+            return False
+        return True
+
+    def move(self, start_square: int, end_square: int) -> bool:
+        start_index = self._square_to_board_index(start_square)
+        end_index = self._square_to_board_index(end_square)
+
+        piece = self._board[start_index]
+        self._board[start_index] = 0
+        self._board[end_index] = piece
+
+        if abs(end_square - start_square) > 5:
+            # We are making a jump
+            middle_index = (
+                int((start_index[0] + end_index[0]) / 2),
+                int((start_index[1] + end_index[1]) / 2),
+            )
+            self._board[middle_index] = 0
+            return True
+        else:
+            return False
 
     def reset(self):
         self._board = np.zeros((8, 8))
-        for row in range(8):
-            piece = self.players["black"] if row < 4 else self.players["white"]
+        for row in [0, 1, 6, 7]:
+            piece = self.players["black"] if row < 2 else self.players["white"]
             if row % 2 == 0:
                 locations = [i for i in range(8) if i % 2 == 1]
             else:

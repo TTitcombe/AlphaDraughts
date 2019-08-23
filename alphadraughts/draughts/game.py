@@ -13,8 +13,9 @@ class Game:
         # VALIDATE THE MOVE
         # MAKE THE MOVE
         start, end = self._parse_move(move)
-        if self._board.validate_move(start, end, self.turn):
+        if not self._board.validate_move(start, end, self.turn):
             pass
+        piece_taken = self._board.move(start, end)
 
         if self.turn == "white":
             self.turn = "black"
