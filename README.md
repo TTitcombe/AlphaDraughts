@@ -1,4 +1,6 @@
+[![Build Status](https://travis-ci.com/TTitcombe/AlphaDraughts.svg?branch=master)](https://travis-ci.com/TTitcombe/AlphaDraughts)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 # AlphaDraughts
 
 AlphaDraughts is a PyTorch implementation of [AlphaGo Zero][alphago_zero] applied to the game of Draughts. \
