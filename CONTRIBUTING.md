@@ -21,3 +21,5 @@ Please add unit tests for any code affecting the [`draughts`][draughts] package.
 [black]: https://github.com/psf/black
 [precommit]: https://pre-commit.com
 [pytest]: https://pytest.org/en/latest/
+
+[draughts]: alphadraughts/draughts
