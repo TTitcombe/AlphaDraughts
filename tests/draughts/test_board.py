@@ -2,6 +2,7 @@ import numpy as np
 import pytest
 
 from alphadraughts.draughts.board import Board, Direction
+from tests.draughts.utils import new_board
 
 
 class TestBoard:
@@ -13,18 +14,7 @@ class TestBoard:
         board = Board()
         board.reset()
 
-        expected_board = np.array(
-            [
-                [0, 2, 0, 2, 0, 2, 0, 2],
-                [2, 0, 2, 0, 2, 0, 2, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 1, 0, 1, 0, 1, 0, 1],
-                [1, 0, 1, 0, 1, 0, 1, 0],
-            ]
-        )
+        expected_board = new_board
         assert (board._board == expected_board).all()
 
     def test_board_printout(self):
