@@ -20,10 +20,12 @@ class Game:
     def move(self, move: str) -> bool:
         # VALIDATE THE MOVE
         # MAKE THE MOVE
+        if self.game_over():
+            return False
+
         start, end = self._parse_move(move)
         if not self._board.validate_move(start, end, self.turn):
-            # TODO
-            pass
+            return False
         else:
             self._move_list.append(move)
         piece_taken = self._board.move(start, end)
@@ -32,7 +34,7 @@ class Game:
         else:
             self._remove_piece()
 
-        return self.game_over()
+        return True
 
     def change_turn(self) -> None:
         if self.turn == "white":
@@ -72,4 +74,4 @@ class Game:
         self._move_list = []
         self._pieces_remaining = {"white": 8, "black": 8}
         self.turn = "white"
-        self.board.reset()
+        self._board.reset()

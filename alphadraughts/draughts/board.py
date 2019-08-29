@@ -33,7 +33,6 @@ class Board:
             column = 2 * column + 1
         elif row % 2 == 1:
             column = 2 * column
-        print(square_number, row, column)
         return row, column
 
     def validate_move(self, start_index: int, end_index: int, turn: str) -> bool:
@@ -73,7 +72,6 @@ class Board:
         """
         move_direction = self._get_move_direction(start_pos, end_pos)
         if move_direction == Direction.Invalid:
-            print("invalid")
             return False
 
         if abs(end_pos - start_pos) > 5:
