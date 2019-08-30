@@ -14,8 +14,13 @@ class Game:
         """
         Play a game via the command line
         """
-        # TODO
-        pass
+        self.reset()
+        while not self.game_over():
+            print(self._board)
+            move = input("{} to move: ".format(self.turn))
+            did_move = self.move(move)
+            if not did_move:
+                print("Move {} invalid. {} to move again.".format(move, self.turn))
 
     def move(self, move: str) -> bool:
         # VALIDATE THE MOVE
