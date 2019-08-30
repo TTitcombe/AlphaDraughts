@@ -92,3 +92,27 @@ class TestGame:
         assert game._move_list == []
         assert game.turn == "white"
         assert game._pieces_remaining == {"white": 8, "black": 8}
+
+    def test_valid_moves_considers_player_turn(self):
+        game = Game(None, None)
+        game.turn = "black"
+
+        # Remove existing black pieces
+        game._board._board[:, :2] = 0
+        game._board._board[0, 3] = 2
+
+        assert game.valid_moves() == ["2-6", "2-7"]
+
+    def test_valid_moves_can_accept_other_piece(self):
+        game = Game(None, None)
+
+        # Remove all black pieces, but keep game turn as white
+        game._board._board[:, :2] = 0
+
+        assert game.valid_moves("black") == []
+
+    def test_valid_moves_returns_empty_list_if_no_moves(self):
+        game = Game(None, None)
+        # game._board is initialised to an empty array
+        # no pieces == no moves
+        assert game.valid_moves() == []

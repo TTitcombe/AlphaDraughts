@@ -109,3 +109,33 @@ class TestBoard:
         assert board._board[(6, 3)] == 0
         assert board._board[(5, 4)] == 0
         assert board._board[(4, 5)] == 1
+
+    def test_board_index_to_square(self):
+        board = Board()
+
+        assert board._board_index_to_square((0, 1)) == 1
+        assert board._board_index_to_square((7, 6)) == 32
+        assert board._board_index_to_square((2, 5)) == 11
+        assert board._board_index_to_square((3, 2)) == 14
+
+    def test_finds_valid_starting_moves_for_white(self):
+        board = Board()
+        board.reset()
+
+        expected_starting_moves = [
+            "25-21",
+            "25-22",
+            "26-22",
+            "26-23",
+            "27-23",
+            "27-24",
+            "28-24",
+        ]
+        assert board.valid_moves("white") == expected_starting_moves
+
+    def test_finds_valid_starting_moves_for_black(self):
+        board = Board()
+        board.reset()
+
+        expected_starting_moves = ["5-9", "6-9", "6-10", "7-10", "7-11", "8-11", "8-12"]
+        assert board.valid_moves("black") == expected_starting_moves

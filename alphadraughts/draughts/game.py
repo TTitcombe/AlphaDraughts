@@ -18,9 +18,18 @@ class Game:
         while not self.game_over():
             print(self._board)
             move = input("{} to move: ".format(self.turn))
-            did_move = self.move(move)
-            if not did_move:
-                print("Move {} invalid. {} to move again.".format(move, self.turn))
+            if move.lower() == "help":
+                print("Valid moves for {}: ".format(self.turn))
+                valid_moves = self.valid_moves()
+                for move in valid_moves:
+                    print(move)
+            else:
+                did_move = self.move(move)
+                if not did_move:
+                    print(
+                        "Move {} invalid. {} to move again.\n"
+                        "Type `help` to see valid moves".format(move, self.turn)
+                    )
 
     def move(self, move: str) -> bool:
         # VALIDATE THE MOVE
@@ -40,6 +49,13 @@ class Game:
             self._remove_piece()
 
         return True
+
+    def valid_moves(self, turn="") -> list:
+        turn = turn if turn else self.turn
+        if self._pieces_remaining[turn] == 0:
+            return []
+        else:
+            return self._board.valid_moves(turn)
 
     def change_turn(self) -> None:
         if self.turn == "white":
