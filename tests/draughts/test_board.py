@@ -139,3 +139,39 @@ class TestBoard:
 
         expected_starting_moves = ["5-9", "6-9", "6-10", "7-10", "7-11", "8-11", "8-12"]
         assert board.valid_moves("black") == expected_starting_moves
+
+    def test_cant_take_if_middle_piece_is_same_as_taking_piece(self):
+        board = Board()
+        board.reset()
+
+        # Put white pieces next to one another
+        board._board[4, 3] = 1
+        board._board[3, 2] = 1
+
+        assert not board._check_can_take(18, 9)
+
+    def test_cant_take_if_no_middle_piece(self):
+        board = Board()
+        board.reset()
+
+        board._board[4, 3] = 1
+
+        assert not board._check_can_take(18, 9)
+
+    def test_white_can_take_black(self):
+        board = Board()
+        board.reset()
+
+        board._board[4, 3] = 1
+        board._board[3, 2] = 2
+
+        assert board._check_can_take(18, 9)
+
+    def test_black_can_take_white(self):
+        board = Board()
+        board.reset()
+
+        board._board[2, 1] = 2
+        board._board[3, 2] = 1
+
+        assert board._check_can_take(9, 18)

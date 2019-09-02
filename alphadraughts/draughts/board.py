@@ -127,11 +127,14 @@ class Board:
         return True
 
     def _check_can_take(self, start_pos: int, end_pos: int) -> bool:
-        middle_pos = start_pos + int((end_pos - start_pos) / 2)
-        if self._board[start_pos] == self._board[middle_pos]:
+        start_index = self._square_to_board_index(start_pos)
+        end_index = self._square_to_board_index(end_pos)
+        middle_index = tuple(int((e + s) / 2) for s, e in zip(start_index, end_index))
+
+        if self._board[start_index] == self._board[middle_index]:
             # If they're the same piece, we can't jump
             return False
-        if self._board[middle_pos] == 0:
+        if self._board[middle_index] == 0:
             # If there isn't a piece in the middle, we can't jump
             return False
         return True
@@ -169,7 +172,6 @@ class Board:
         moves = []
         piece = self.players[turn]
         start_positions = list(np.argwhere(self._board == piece))
-        print(start_positions)
         for start_position in start_positions:
             start_square = self._board_index_to_square(tuple(start_position))
             for x_move in [-1, 1]:
