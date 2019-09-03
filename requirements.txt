@@ -5,3 +5,4 @@ black
 pytest
 numpy
 matplotlib
+pre-commit

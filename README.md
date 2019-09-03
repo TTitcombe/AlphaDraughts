@@ -9,7 +9,11 @@ but only two types of pieces. Additionally, Draughts has been [weakly solved][so
 should present less of a burden to train than AlphaGo (although just how much less is to be determined).
 
 ### How to run
-The logic for the game is currently being implemented. There is nothing to run yet.
+The full logic for the game is currently being implemented.
+However, you can run a player-vs-player game by running `python -m scripts.play_game`. This script accepts user input
+of the form "start-end", where *start* and *end* are board square numbers.
+
+AI-vs-AI and Human-vs-AI is being implemented.
 
 ### Contributing
 Contributions to this project are more than welcome. Please see the [contributing guide][contributing].
