@@ -1,7 +1,8 @@
 import numpy as np
 import pytest
 
-from alphadraughts.draughts.board import Board, Direction
+from alphadraughts.draughts.board import Board
+from alphadraughts.draughts.enums import Direction
 from tests.draughts.utils import new_board
 
 

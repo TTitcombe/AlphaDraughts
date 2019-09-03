@@ -1,14 +1,7 @@
 from enum import Enum
-
 import numpy as np
 
-
-class Direction(Enum):
-    NE = 1
-    SE = 2
-    SW = 3
-    NW = 4
-    Invalid = 5
+from alphadraughts.draughts.enums import Direction
 
 
 class Board:
