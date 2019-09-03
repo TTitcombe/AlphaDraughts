@@ -109,3 +109,69 @@ class TestBoard:
         assert board._board[(6, 3)] == 0
         assert board._board[(5, 4)] == 0
         assert board._board[(4, 5)] == 1
+
+    def test_board_index_to_square(self):
+        board = Board()
+
+        assert board._board_index_to_square((0, 1)) == 1
+        assert board._board_index_to_square((7, 6)) == 32
+        assert board._board_index_to_square((2, 5)) == 11
+        assert board._board_index_to_square((3, 2)) == 14
+
+    def test_finds_valid_starting_moves_for_white(self):
+        board = Board()
+        board.reset()
+
+        expected_starting_moves = [
+            "25-21",
+            "25-22",
+            "26-22",
+            "26-23",
+            "27-23",
+            "27-24",
+            "28-24",
+        ]
+        assert board.valid_moves("white") == expected_starting_moves
+
+    def test_finds_valid_starting_moves_for_black(self):
+        board = Board()
+        board.reset()
+
+        expected_starting_moves = ["5-9", "6-9", "6-10", "7-10", "7-11", "8-11", "8-12"]
+        assert board.valid_moves("black") == expected_starting_moves
+
+    def test_cant_take_if_middle_piece_is_same_as_taking_piece(self):
+        board = Board()
+        board.reset()
+
+        # Put white pieces next to one another
+        board._board[4, 3] = 1
+        board._board[3, 2] = 1
+
+        assert not board._check_can_take(18, 9)
+
+    def test_cant_take_if_no_middle_piece(self):
+        board = Board()
+        board.reset()
+
+        board._board[4, 3] = 1
+
+        assert not board._check_can_take(18, 9)
+
+    def test_white_can_take_black(self):
+        board = Board()
+        board.reset()
+
+        board._board[4, 3] = 1
+        board._board[3, 2] = 2
+
+        assert board._check_can_take(18, 9)
+
+    def test_black_can_take_white(self):
+        board = Board()
+        board.reset()
+
+        board._board[2, 1] = 2
+        board._board[3, 2] = 1
+
+        assert board._check_can_take(9, 18)

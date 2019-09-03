@@ -35,6 +35,15 @@ class Board:
             column = 2 * column
         return row, column
 
+    def _board_index_to_square(self, index: tuple) -> int:
+        max_square_on_row = 4 * (index[0] + 1)
+        if index[0] % 2 == 0:
+            column = index[1] - 1
+        else:
+            column = index[1]
+
+        return max_square_on_row - (3 - int(column // 2))
+
     def validate_move(self, start_index: int, end_index: int, turn: str) -> bool:
         current_move = self.players[turn]
 
@@ -118,11 +127,14 @@ class Board:
         return True
 
     def _check_can_take(self, start_pos: int, end_pos: int) -> bool:
-        middle_pos = start_pos + int((end_pos - start_pos) / 2)
-        if self._board[start_pos] == self._board[middle_pos]:
+        start_index = self._square_to_board_index(start_pos)
+        end_index = self._square_to_board_index(end_pos)
+        middle_index = tuple(int((e + s) / 2) for s, e in zip(start_index, end_index))
+
+        if self._board[start_index] == self._board[middle_index]:
             # If they're the same piece, we can't jump
             return False
-        if self._board[middle_pos] == 0:
+        if self._board[middle_index] == 0:
             # If there isn't a piece in the middle, we can't jump
             return False
         return True
@@ -155,6 +167,23 @@ class Board:
             else:
                 locations = [i for i in range(8) if i % 2 == 0]
             self._board[row, locations] = piece
+
+    def valid_moves(self, turn: str) -> list:
+        moves = []
+        piece = self.players[turn]
+        start_positions = list(np.argwhere(self._board == piece))
+        for start_position in start_positions:
+            start_square = self._board_index_to_square(tuple(start_position))
+            for x_move in [-1, 1]:
+                for y_move in [-1, 1]:
+                    end_position = tuple(start_position + np.array([x_move, y_move]))
+                    if 0 <= end_position[0] <= 7 and 0 <= end_position[1] <= 7:
+                        # If we don't do this, 29-24 becomes a valid starting move for white
+                        # TODO investigate why
+                        end_square = self._board_index_to_square(end_position)
+                        if self.validate_move(start_square, end_square, turn):
+                            moves.append("{}-{}".format(start_square, end_square))
+        return moves
 
     def __str__(self):
         board = ""

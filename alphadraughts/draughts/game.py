@@ -9,32 +9,61 @@ class Game:
         self._board = Board()
         self._move_list = []
         self._pieces_remaining = {"white": 8, "black": 8}
+        self.result = None
 
     def play(self):
         """
-        Play a game via the command line
+        Play a game via user input
         """
-        # TODO
-        pass
+        self.reset()
+        while not self.game_over():
+            print(self._board)
+            move = input("{} to move: ".format(self.turn))
+            if move.lower() == "help":
+                print("Valid moves for {}: ".format(self.turn))
+                valid_moves = self.valid_moves()
+                for move in valid_moves:
+                    print(move)
+            else:
+                did_move = self.move(move)
+                if not did_move:
+                    print(
+                        "Move {} invalid. {} to move again.\n"
+                        "Type `help` to see valid moves".format(move, self.turn)
+                    )
 
     def move(self, move: str) -> bool:
-        # VALIDATE THE MOVE
-        # MAKE THE MOVE
+        # CHECK THAT GAME IS OVER
         if self.game_over():
             return False
 
+        # VALIDATE THE MOVE
         start, end = self._parse_move(move)
+        if start is None or end is None:
+            return False
+
         if not self._board.validate_move(start, end, self.turn):
             return False
         else:
             self._move_list.append(move)
+
+        # MAKE THE MOVE
         piece_taken = self._board.move(start, end)
+
+        # POST-MOVE DECISION
         if not piece_taken:
             self.change_turn()
         else:
             self._remove_piece()
 
         return True
+
+    def valid_moves(self, turn="") -> list:
+        turn = turn if turn else self.turn
+        if self._pieces_remaining[turn] == 0:
+            return []
+        else:
+            return self._board.valid_moves(turn)
 
     def change_turn(self) -> None:
         if self.turn == "white":
@@ -47,7 +76,17 @@ class Game:
         self._pieces_remaining[player] -= 1
 
     def game_over(self) -> bool:
-        if min(self._pieces_remaining.values()) == 0:
+        white_remaining = self._pieces_remaining["white"]
+        black_remaining = self._pieces_remaining["black"]
+        if white_remaining == 0:
+            self.result = "black"
+            return True
+        elif black_remaining == 0:
+            self.result = "white"
+            return True
+        elif not self.valid_moves():
+            # No valid moves
+            self.result = "draw"
             return True
         else:
             return False
@@ -75,3 +114,4 @@ class Game:
         self._pieces_remaining = {"white": 8, "black": 8}
         self.turn = "white"
         self._board.reset()
+        self.result = None
