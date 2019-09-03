@@ -9,10 +9,11 @@ class Game:
         self._board = Board()
         self._move_list = []
         self._pieces_remaining = {"white": 8, "black": 8}
+        self.result = None
 
     def play(self):
         """
-        Play a game via the command line
+        Play a game via user input
         """
         self.reset()
         while not self.game_over():
@@ -75,7 +76,17 @@ class Game:
         self._pieces_remaining[player] -= 1
 
     def game_over(self) -> bool:
-        if min(self._pieces_remaining.values()) == 0:
+        white_remaining = self._pieces_remaining["white"]
+        black_remaining = self._pieces_remaining["black"]
+        if white_remaining == 0:
+            self.result = "black"
+            return True
+        elif black_remaining == 0:
+            self.result = "white"
+            return True
+        elif not self.valid_moves():
+            # No valid moves
+            self.result = "draw"
             return True
         else:
             return False
@@ -103,3 +114,4 @@ class Game:
         self._pieces_remaining = {"white": 8, "black": 8}
         self.turn = "white"
         self._board.reset()
+        self.result = None

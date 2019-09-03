@@ -49,12 +49,33 @@ class TestGame:
 
     def test_game_is_over_if_no_pieces_remaining(self):
         game = Game(None, None)
+        game.reset()
         assert not game.game_over()
 
         for _ in range(8):
             game._remove_piece()
 
         assert game.game_over()
+        assert game.result == "white"
+
+    def test_black_wins_if_white_has_no_pieces(self):
+        game = Game(None, None)
+        game.reset()
+        game.change_turn()
+
+        for _ in range(8):
+            game._remove_piece()
+
+        assert game.game_over()
+        assert game.result == "black"
+
+    def test_game_over_if_no_valid_moves(self):
+        game = Game(None, None)
+        game.reset()
+        game.valid_moves = mock.Mock(return_value=[])
+
+        assert game.game_over()
+        assert game.result == "draw"
 
     def test_that_move_returns_True_if_move_made(self):
         game = Game(None, None)
