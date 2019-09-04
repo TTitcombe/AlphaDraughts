@@ -5,6 +5,7 @@ import pytest
 
 from alphadraughts.draughts.board import Board
 from alphadraughts.draughts.game import Game
+from alphadraughts.draughts.piece import EmptyPiece, Piece, King
 from tests.draughts.utils import new_board
 
 
@@ -146,7 +147,7 @@ class TestGame:
 
     def test_that_reset_resets_game(self):
         game = Game(None, None)
-        game._board._board[5, 4] = 1
+        game._board._board[5, 4] = Piece("white", None)
         game._move_list = [1, 2, 3, 4]
         game.turn = "black"
         game._pieces_remaining = {"white": 5, "black": 6}
@@ -163,8 +164,8 @@ class TestGame:
         game.turn = "black"
 
         # Remove existing black pieces
-        game._board._board[:, :2] = 0
-        game._board._board[0, 3] = 2
+        game._board._board[:, :2] = EmptyPiece()
+        game._board._board[0, 3] = Piece("black", None)
 
         assert game.valid_moves() == ["2-6", "2-7"]
 
@@ -172,7 +173,7 @@ class TestGame:
         game = Game(None, None)
 
         # Remove all black pieces, but keep game turn as white
-        game._board._board[:, :2] = 0
+        game._board._board[:, :2] = EmptyPiece()
 
         assert game.valid_moves("black") == []
 

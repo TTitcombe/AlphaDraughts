@@ -3,13 +3,14 @@ import pytest
 
 from alphadraughts.draughts.board import Board
 from alphadraughts.draughts.enums import Direction
+from alphadraughts.draughts.piece import EmptyPiece, Piece, King
 from tests.draughts.utils import new_board
 
 
 class TestBoard:
     def test_board_initialises_to_empty(self):
         board = Board()
-        assert (board._board == np.zeros((8, 8))).all()
+        assert (board._board == np.full((8, 8), EmptyPiece(), dtype=object)).all()
 
     def test_reset_sets_correct_board(self):
         board = Board()
@@ -90,13 +91,13 @@ class TestBoard:
 
         piece_taken = board.move(26, 23)
         assert not piece_taken
-        assert board._board[(6, 3)] == 0
-        assert board._board[(5, 4)] == 1
+        assert board._board[(6, 3)] == EmptyPiece()
+        assert board._board[(5, 4)] == Piece("white", None)
 
         piece_taken = board.move(6, 10)
         assert not piece_taken
-        assert board._board[(1, 2)] == 0
-        assert board._board[(2, 3)] == 2
+        assert board._board[(1, 2)] == EmptyPiece()
+        assert board._board[(2, 3)] == Piece("black", None)
 
     def test_move_removes_taken_pieces(self):
         board = Board()
@@ -107,9 +108,9 @@ class TestBoard:
 
         piece_taken = board.move(26, 19)
         assert piece_taken
-        assert board._board[(6, 3)] == 0
-        assert board._board[(5, 4)] == 0
-        assert board._board[(4, 5)] == 1
+        assert board._board[(6, 3)] == EmptyPiece()
+        assert board._board[(5, 4)] == EmptyPiece()
+        assert board._board[(4, 5)] == Piece("white", None)
 
     def test_board_index_to_square(self):
         board = Board()
@@ -146,8 +147,8 @@ class TestBoard:
         board.reset()
 
         # Put white pieces next to one another
-        board._board[4, 3] = 1
-        board._board[3, 2] = 1
+        board._board[4, 3] = Piece("white", None)
+        board._board[3, 2] = Piece("white", None)
 
         assert not board._check_can_take(18, 9)
 
@@ -155,7 +156,7 @@ class TestBoard:
         board = Board()
         board.reset()
 
-        board._board[4, 3] = 1
+        board._board[4, 3] = Piece("white", None)
 
         assert not board._check_can_take(18, 9)
 
@@ -163,8 +164,8 @@ class TestBoard:
         board = Board()
         board.reset()
 
-        board._board[4, 3] = 1
-        board._board[3, 2] = 2
+        board._board[4, 3] = Piece("white", None)
+        board._board[3, 2] = Piece("black", None)
 
         assert board._check_can_take(18, 9)
 
@@ -172,7 +173,7 @@ class TestBoard:
         board = Board()
         board.reset()
 
-        board._board[2, 1] = 2
-        board._board[3, 2] = 1
+        board._board[2, 1] = Piece("black", None)
+        board._board[3, 2] = Piece("white", None)
 
         assert board._check_can_take(9, 18)
