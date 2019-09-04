@@ -141,6 +141,9 @@ class Board:
         self._board[start_index] = EmptyPiece()
         self._board[end_index] = piece
 
+        # See if a piece can be promoted
+        self._promote(end_index)
+
         if abs(end_square - start_square) > 5:
             # We are making a jump
             middle_index = (
@@ -178,6 +181,13 @@ class Board:
                         if self.validate_move(start_square, end_square, turn):
                             moves.append("{}-{}".format(start_square, end_square))
         return moves
+
+    def _promote(self, index: tuple) -> None:
+        piece = self._board[index]
+        if index[0] == 0 and piece == "white" or index[0] == 7 and piece == "black":
+            # White piece on top row becomes a King
+            # or black piece on bottom row
+            self._board[index] = piece.promote()
 
     def __str__(self):
         board = ""

@@ -104,13 +104,45 @@ class TestBoard:
         board.reset()
 
         # Put a black piece next to a white
-        board._board[(5, 4)] = 2
+        board._board[(5, 4)] = Piece("black", None)
 
         piece_taken = board.move(26, 19)
         assert piece_taken
         assert board._board[(6, 3)] == EmptyPiece()
         assert board._board[(5, 4)] == EmptyPiece()
         assert board._board[(4, 5)] == Piece("white", None)
+
+    def test_that_white_pieces_can_be_promoted_on_move(self):
+        board = Board()
+        board.reset()
+
+        # put a white piece within a move of end row
+        board._board[(1, 0)] = Piece("white", None)
+
+        # remove the black piece in its way
+        board._board[(0, 1)] = EmptyPiece(None)
+
+        # Move the white piece into the top row
+        board.move(5, 1)
+
+        assert board._board[(1, 0)] == EmptyPiece()
+        assert board._board[(0, 1)] == King("white", None)
+
+    def test_that_black_pieces_can_be_promoted_on_move(self):
+        board = Board()
+        board.reset()
+
+        # put a black piece within a move of bottom row
+        board._board[(6, 1)] = Piece("black", None)
+
+        # remove the black piece in its way
+        board._board[(7, 0)] = EmptyPiece(None)
+
+        # Move the white piece into the bottom row
+        board.move(25, 29)
+
+        assert board._board[(6, 1)] == EmptyPiece()
+        assert board._board[(7, 0)] == King("black", None)
 
     def test_board_index_to_square(self):
         board = Board()
@@ -177,3 +209,39 @@ class TestBoard:
         board._board[3, 2] = Piece("white", None)
 
         assert board._check_can_take(9, 18)
+
+    def test_white_pieces_not_promoted_on_non_top_row(self):
+        board = Board()
+        board.reset()
+
+        board._promote((7, 0))
+        assert not isinstance(board._board[(7, 0)], King)
+
+        board._promote((6, 1))
+        assert not isinstance(board._board[(6, 1)], King)
+
+    def test_black_pieces_not_promoted_on_non_bottom_row(self):
+        board = Board()
+        board.reset()
+
+        board._promote((0, 1))
+        assert not isinstance(board._board[(0, 1)], King)
+
+        board._promote((1, 2))
+        assert not isinstance(board._board[(1, 2)], King)
+
+    def test_that_white_piece_on_top_row_can_be_promoted(self):
+        board = Board()
+        board.reset()
+
+        board._board[(0, 1)] = Piece("white", 1)
+        board._promote((0, 1))
+        assert isinstance(board._board[(0, 1)], King)
+
+    def test_that_black_piece_on_bottom_row_can_be_promoted(self):
+        board = Board()
+        board.reset()
+
+        board._board[(7, 0)] = Piece("black", 29)
+        board._promote((7, 0))
+        assert isinstance(board._board[(7, 0)], King)
