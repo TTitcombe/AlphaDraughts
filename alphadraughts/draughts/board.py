@@ -41,26 +41,27 @@ class Board:
     def validate_move(self, start_index: int, end_index: int, turn: str) -> bool:
         current_move = self.players[turn]
 
+        # Check that the start square exists
         if not self._valid_index(start_index):
-            # Start index must be on board
             return False
 
+        # Check that the end square exists
         if not self._valid_index(end_index):
-            # End index must be on board
             return False
 
+        # Check that the moving piece is on the current side
         start_board_index = self._square_to_board_index(start_index)
         if self._board[start_board_index] != current_move:
-            # Can only move your own pieces
             return False
 
+        # Check that end square isn't occupied
         end_board_index = self._square_to_board_index(end_index)
         if self._board[end_board_index] != EmptyPiece():
-            # Can't land on an occupied space!
             return False
 
+        # Check that the move direction is diagonal
+        # and valid for the piece type
         if not self._valid_move(start_index, end_index):
-            # Moves must be diagonal
             return False
 
         # TODO check that there aren't pieces in the way
@@ -71,7 +72,6 @@ class Board:
         """
         Check that move is of correct direction and distance.
         Currently assumes all pieces are Men
-        TODO add logic for Kings
         """
         move_direction = self._get_move_direction(start_pos, end_pos)
         if move_direction == Direction.Invalid:
@@ -84,13 +84,7 @@ class Board:
 
         # Check that we're moving in the correct direction
         piece = self._board[self._square_to_board_index(start_pos)]
-        difference = end_pos - start_pos
-        if piece == 1 and difference > 0:
-            return False
-        elif piece == 2 and difference < 0:
-            return False
-
-        return True
+        return piece.move(move_direction)
 
     def _get_move_direction(self, start_pos: int, end_pos: int) -> Enum:
         difference = end_pos - start_pos

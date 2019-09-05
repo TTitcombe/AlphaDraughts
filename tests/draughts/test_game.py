@@ -182,3 +182,28 @@ class TestGame:
         # game._board is initialised to an empty array
         # no pieces == no moves
         assert game.valid_moves() == []
+
+    def test_valid_moves_do_not_include_backwards_moves(self):
+        game = Game(None, None)
+        game.reset()
+
+        game.move("26-23")
+        game.move("7-11")
+
+        assert "23-26" not in game.valid_moves("white")
+        assert "11-7" not in game.valid_moves("black")
+
+    def test_valid_moves_include_backwards_moves_for_kings(self):
+        game = Game(None, None)
+        game.reset()
+
+        game._board._board[4, 3] = King("white", None)
+        game._board._board[4, 5] = King("black", None)
+
+        white_moves = game.valid_moves("white")
+        for move in ["18-14", "18-15", "18-22", "18-23"]:
+            assert move in white_moves
+
+        black_moves = game.valid_moves("black")
+        for move in ["19-15", "19-16", "19-23", "19-24"]:
+            assert move in black_moves
