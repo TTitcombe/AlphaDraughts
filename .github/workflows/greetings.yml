@@ -10,4 +10,4 @@ jobs:
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         issue-message: 'Thank you for taking the time to open up an issue on this project.'' first issue'
-        pr-message: 'Thank you for contributing to this project! I'm sure the PR is great, but please make sure you have read CONTRIBUTING.md and understand the structure/testing/code formatting used in Alphadraughts'' first pr'
+        pr-message: 'Thank you for contributing to this project! I am sure the PR is great, but please make sure you have read CONTRIBUTING.md and understand the structure/testing/code formatting used in Alphadraughts'' first pr'
