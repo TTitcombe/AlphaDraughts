@@ -1,4 +1,5 @@
 from alphadraughts import Game
 
-game = Game(None, None)
-game.play()
+if __name__ == "__main__":
+    game = Game()
+    game.play()
