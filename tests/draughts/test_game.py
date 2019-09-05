@@ -207,3 +207,31 @@ class TestGame:
         black_moves = game.valid_moves("black")
         for move in ["19-15", "19-16", "19-23", "19-24"]:
             assert move in black_moves
+
+    def test_takes_included_in_valid_moves(self):
+        game = Game()
+
+        game._board._board[4, 3] = Piece("white", None)
+        game._board._board[3, 4] = Piece("black", None)
+        game._board._board[5, 4] = Piece("black", None)
+        game._board._board[2, 3] = Piece("white", None)
+
+        assert "18-11" in game.valid_moves("white")
+        assert "15-22" in game.valid_moves("black")
+        assert "18-27" not in game.valid_moves(
+            "white"
+        )  # because piece can't move backwards
+        assert "15-6" not in game.valid_moves("black")
+
+    def test_that_king_takes_are_included_in_valid_moves(self):
+        game = Game()
+
+        game._board._board[4, 3] = King("white", None)
+        game._board._board[3, 4] = King("black", None)
+        game._board._board[5, 4] = King("black", None)
+        game._board._board[2, 3] = King("white", None)
+
+        assert "18-11" in game.valid_moves("white")
+        assert "15-22" in game.valid_moves("black")
+        assert "18-27" in game.valid_moves("white")
+        assert "15-6" in game.valid_moves("black")
