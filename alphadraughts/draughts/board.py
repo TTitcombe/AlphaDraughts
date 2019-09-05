@@ -1,14 +1,8 @@
 from enum import Enum
-
 import numpy as np
 
-
-class Direction(Enum):
-    NE = 1
-    SE = 2
-    SW = 3
-    NW = 4
-    Invalid = 5
+from alphadraughts.draughts.enums import Direction
+from alphadraughts.draughts.piece import EmptyPiece, Piece, King
 
 
 class Board:
@@ -19,12 +13,12 @@ class Board:
     When displayed, whites are 'O' and blacks are 'X'
     """
 
-    players = {"white": 1, "black": 2}
+    players = {"white": Piece("white", None), "black": Piece("black", None)}
 
     board_to_print = {0: "-", 1: "O", 2: "X"}
 
     def __init__(self):
-        self._board = np.zeros((8, 8))
+        self._board = np.full((8, 8), EmptyPiece(), dtype=object)
 
     def _square_to_board_index(self, square_number: int) -> tuple:
         row = (square_number - 1) // 4
@@ -61,7 +55,7 @@ class Board:
             return False
 
         end_board_index = self._square_to_board_index(end_index)
-        if self._board[end_board_index] != 0:
+        if self._board[end_board_index] != EmptyPiece():
             # Can't land on an occupied space!
             return False
 
@@ -134,7 +128,7 @@ class Board:
         if self._board[start_index] == self._board[middle_index]:
             # If they're the same piece, we can't jump
             return False
-        if self._board[middle_index] == 0:
+        if self._board[middle_index] == EmptyPiece():
             # If there isn't a piece in the middle, we can't jump
             return False
         return True
@@ -144,8 +138,11 @@ class Board:
         end_index = self._square_to_board_index(end_square)
 
         piece = self._board[start_index]
-        self._board[start_index] = 0
+        self._board[start_index] = EmptyPiece()
         self._board[end_index] = piece
+
+        # See if a piece can be promoted
+        self._promote(end_index)
 
         if abs(end_square - start_square) > 5:
             # We are making a jump
@@ -153,13 +150,13 @@ class Board:
                 int((start_index[0] + end_index[0]) / 2),
                 int((start_index[1] + end_index[1]) / 2),
             )
-            self._board[middle_index] = 0
+            self._board[middle_index] = EmptyPiece()
             return True
         else:
             return False
 
     def reset(self):
-        self._board = np.zeros((8, 8))
+        self._board = np.full((8, 8), EmptyPiece(), dtype=object)
         for row in [0, 1, 6, 7]:
             piece = self.players["black"] if row < 2 else self.players["white"]
             if row % 2 == 0:
@@ -185,10 +182,17 @@ class Board:
                             moves.append("{}-{}".format(start_square, end_square))
         return moves
 
+    def _promote(self, index: tuple) -> None:
+        piece = self._board[index]
+        if index[0] == 0 and piece == "white" or index[0] == 7 and piece == "black":
+            # White piece on top row becomes a King
+            # or black piece on bottom row
+            self._board[index] = piece.promote()
+
     def __str__(self):
         board = ""
         for row in range(8):
             for column in range(8):
-                board += self.board_to_print[self._board[row, column]]
+                board += str(self._board[row, column])
             board += "\n"
         return board
