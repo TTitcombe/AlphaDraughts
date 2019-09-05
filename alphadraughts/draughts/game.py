@@ -1,8 +1,12 @@
 from .board import Board
+from .players import BasePlayer, HumanPlayer
 
 
 class Game:
-    def __init__(self, white, black):
+    def __init__(self, white=HumanPlayer("white"), black=HumanPlayer("black")):
+        """
+        Create a game object. The default is human vs human.
+        """
         self.white = white
         self.black = black
         self.turn = "white"  # Start with white
@@ -18,19 +22,20 @@ class Game:
         self.reset()
         while not self.game_over():
             print(self._board)
-            move = input("{} to move: ".format(self.turn))
-            if move.lower() == "help":
-                print("Valid moves for {}: ".format(self.turn))
-                valid_moves = self.valid_moves()
-                for move in valid_moves:
-                    print(move)
+            if self.turn == "white":
+                move = self.white.choose_move(self.valid_moves())
             else:
-                did_move = self.move(move)
-                if not did_move:
-                    print(
-                        "Move {} invalid. {} to move again.\n"
-                        "Type `help` to see valid moves".format(move, self.turn)
-                    )
+                move = self.black.choose_move(self.valid_moves())
+            did_move = self.move(move)
+            if not did_move:
+                print(
+                    "Move {} invalid. {} to move again.\n"
+                    "Type `help` to see valid moves".format(move, self.turn)
+                )
+        if self.result == "draw":
+            print("It's a draw!")
+        else:
+            print("{} wins!".format(self.result))
 
     def move(self, move: str) -> bool:
         # CHECK THAT GAME IS OVER
