@@ -163,17 +163,29 @@ class Board:
         moves = []
         piece = self.players[turn]
         start_positions = list(np.argwhere(self._board == piece))
+
+        # Loop through start positions
         for start_position in start_positions:
             start_square = self._board_index_to_square(tuple(start_position))
+            # Step left and right
             for x_move in [-1, 1]:
+                # Step forward and backward
                 for y_move in [-1, 1]:
-                    end_position = tuple(start_position + np.array([x_move, y_move]))
-                    if 0 <= end_position[0] <= 7 and 0 <= end_position[1] <= 7:
-                        # If we don't do this, 29-24 becomes a valid starting move for white
-                        # TODO investigate why
-                        end_square = self._board_index_to_square(end_position)
-                        if self.validate_move(start_square, end_square, turn):
-                            moves.append("{}-{}".format(start_square, end_square))
+                    # Include steps and takes
+                    for step_multiplier in [1, 2]:
+                        end_position = tuple(
+                            start_position
+                            + np.array(
+                                [step_multiplier * x_move, step_multiplier * y_move]
+                            )
+                        )
+
+                        if 0 <= end_position[0] <= 7 and 0 <= end_position[1] <= 7:
+                            # If we don't do this, 29-24 becomes a valid starting move for white
+                            # TODO investigate why
+                            end_square = self._board_index_to_square(end_position)
+                            if self.validate_move(start_square, end_square, turn):
+                                moves.append("{}-{}".format(start_square, end_square))
         return moves
 
     def _promote(self, index: tuple) -> None:

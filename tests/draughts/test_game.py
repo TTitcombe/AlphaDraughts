@@ -70,13 +70,35 @@ class TestGame:
         assert game.game_over()
         assert game.result == "black"
 
-    def test_game_over_if_no_valid_moves(self):
+    def test_other_play_wins_if_no_valid_moves(self):
         game = Game()
         game.reset()
         game.valid_moves = mock.Mock(return_value=[])
 
         assert game.game_over()
-        assert game.result == "draw"
+        assert game.result == "black"
+
+        game.turn = "black"
+        assert game.game_over()
+        assert game.result == "white"
+
+    def test_result_is_draw_if_forty_moves_without_take(self):
+        game = Game()
+        game.reset()
+
+        assert not game.game_over()
+
+        game.reset()
+        game._moves_since_take = 39
+        assert not game.game_over()
+
+        game.reset()
+        game._moves_since_take = 40
+        assert game.game_over()
+
+        game.reset()
+        game._moves_since_take = 92
+        assert game.game_over()
 
     def test_that_move_returns_True_if_move_made(self):
         game = Game()

@@ -14,6 +14,7 @@ class Game:
         self._move_list = []
         self._pieces_remaining = {"white": 8, "black": 8}
         self.result = None
+        self._moves_since_take = 0
 
     def play(self):
         """
@@ -32,6 +33,7 @@ class Game:
                     "Move {} invalid. {} to move again.\n"
                     "Type `help` to see valid moves".format(move, self.turn)
                 )
+        print(self._board)
         if self.result == "draw":
             print("It's a draw!")
         else:
@@ -57,8 +59,10 @@ class Game:
 
         # POST-MOVE DECISION
         if not piece_taken:
+            self._moves_since_take += 1
             self.change_turn()
         else:
+            self._moves_since_take = 0
             self._remove_piece()
 
         return True
@@ -83,15 +87,22 @@ class Game:
     def game_over(self) -> bool:
         white_remaining = self._pieces_remaining["white"]
         black_remaining = self._pieces_remaining["black"]
-        if white_remaining == 0:
+
+        if self._moves_since_take >= 40:
+            self.result = "draw"
+            return True
+        elif not self.valid_moves():
+            # No valid moves, so the other player wins
+            if self.turn == "white":
+                self.result = "black"
+            else:
+                self.result = "white"
+            return True
+        elif white_remaining == 0:
             self.result = "black"
             return True
         elif black_remaining == 0:
             self.result = "white"
-            return True
-        elif not self.valid_moves():
-            # No valid moves
-            self.result = "draw"
             return True
         else:
             return False
@@ -120,3 +131,4 @@ class Game:
         self.turn = "white"
         self._board.reset()
         self.result = None
+        self._moves_since_take = 0
