@@ -1,12 +1,11 @@
 from unittest import mock
 
 import numpy as np
-import pytest
 
 from alphadraughts.draughts.board import Board
 from alphadraughts.draughts.game import Game
 from alphadraughts.draughts.piece import EmptyPiece, Piece, King
-from tests.draughts.utils import new_board
+from tests.unittests.draughts.utils import new_board
 
 
 class TestGame:
@@ -135,7 +134,6 @@ class TestGame:
         assert not game.move("18_14")
 
     def test_that_move_removes_piece_if_white_takes_black(self):
-        # TODO Move this to a gameplay test later
         game = Game()
         game.reset()
 
@@ -151,7 +149,6 @@ class TestGame:
         assert game._pieces_remaining["black"] == 7
 
     def test_that_move_removes_piece_if_black_takes_white(self):
-        # TODO Move this to a gameplay test later
         game = Game()
         game.reset()
 
