@@ -1,10 +1,9 @@
 import numpy as np
-import pytest
 
 from alphadraughts.draughts.board import Board
 from alphadraughts.draughts.enums import Direction
 from alphadraughts.draughts.piece import EmptyPiece, Piece, King
-from tests.draughts.utils import new_board
+from tests.unittests.draughts.utils import new_board
 
 
 class TestBoard:
