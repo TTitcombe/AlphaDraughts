@@ -2,6 +2,7 @@ torch
 torchvision
 tqdm
 black
+pytype
 pytest
 numpy
 matplotlib

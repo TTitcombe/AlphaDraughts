@@ -1,4 +1,4 @@
-from alphadraughts.algorithms.random import choose_random_moves
+from alphadraughts.algorithms.random_play import choose_random_moves
 
 
 class BasePlayer:

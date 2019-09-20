@@ -1,4 +1,4 @@
-from alphadraughts.draughts.enums import Direction
+from .enums import Direction
 
 
 class BasePiece:

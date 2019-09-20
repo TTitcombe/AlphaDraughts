@@ -1,8 +1,8 @@
 from enum import Enum
 import numpy as np
 
-from alphadraughts.draughts.enums import Direction
-from alphadraughts.draughts.piece import EmptyPiece, Piece, King
+from .enums import Direction
+from .piece import EmptyPiece, Piece, King
 
 
 class Board:

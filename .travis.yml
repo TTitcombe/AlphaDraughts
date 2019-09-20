@@ -6,10 +6,11 @@ python:
 jobs:
   include:
     - stage: "Code analysis"
-      name: "black"
+      name: "Code formatting and type checking"
       install:
-        - pip install black
+        - pip install black pytype
       script:
+       - pytype --keep-going alphadraughts
        - black --check alphadraughts/
     - stage: "Testing"
       name: "unit testing"
