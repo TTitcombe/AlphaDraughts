@@ -1,8 +1,10 @@
 from enum import Enum
+from typing import List, Tuple
+
 import numpy as np
 
 from .enums import Direction
-from .piece import EmptyPiece, Piece, King
+from .piece import EmptyPiece, King, Piece
 
 
 class Board:
@@ -20,7 +22,7 @@ class Board:
     def __init__(self):
         self._board = np.full((8, 8), EmptyPiece(), dtype=object)
 
-    def _square_to_board_index(self, square_number: int) -> tuple:
+    def _square_to_board_index(self, square_number: int) -> Tuple:
         row = (square_number - 1) // 4
         column = (square_number - 1) % 4
         if row % 2 == 0:
@@ -29,7 +31,7 @@ class Board:
             column = 2 * column
         return row, column
 
-    def _board_index_to_square(self, index: tuple) -> int:
+    def _board_index_to_square(self, index: Tuple) -> int:
         max_square_on_row = 4 * (index[0] + 1)
         if index[0] % 2 == 0:
             column = index[1] - 1
@@ -159,7 +161,7 @@ class Board:
                 locations = [i for i in range(8) if i % 2 == 0]
             self._board[row, locations] = piece
 
-    def valid_moves(self, turn: str) -> list:
+    def valid_moves(self, turn: str) -> List:
         moves = []
         piece = self.players[turn]
         start_positions = list(np.argwhere(self._board == piece))
@@ -188,7 +190,7 @@ class Board:
                                 moves.append("{}-{}".format(start_square, end_square))
         return moves
 
-    def _promote(self, index: tuple) -> None:
+    def _promote(self, index: Tuple) -> None:
         piece = self._board[index]
         if index[0] == 0 and piece == "white" or index[0] == 7 and piece == "black":
             # White piece on top row becomes a King

@@ -1,3 +1,5 @@
+from typing import List, Tuple
+
 from .board import Board
 from .players import BasePlayer, HumanPlayer
 
@@ -21,25 +23,38 @@ class Game:
         Play a game via user input
         """
         self.reset()
+
+        did_move = True
+        move = None
+
         while not self.game_over():
+            if not did_move:
+                print(
+                    "Move {} invalid. {} to move again.\n"
+                    "Type `help` to see valid moves".format(move, self.turn)
+                )
+
             print(self._board)
             if self.turn == "white":
                 move = self.white.choose_move(self.valid_moves())
             else:
                 move = self.black.choose_move(self.valid_moves())
             did_move = self.move(move)
-            if not did_move:
-                print(
-                    "Move {} invalid. {} to move again.\n"
-                    "Type `help` to see valid moves".format(move, self.turn)
-                )
+
         print(self._board)
         if self.result == "draw":
             print("It's a draw!")
+        elif self.result == "abandoned":
+            print("Match abandoned")
         else:
             print("{} wins!".format(self.result))
 
     def move(self, move: str) -> bool:
+        # ABANDON MATCH
+        if move.lower() == "abandon":
+            self.result = "abandoned"
+            return False
+
         # CHECK THAT GAME IS OVER
         if self.game_over():
             return False
@@ -67,7 +82,7 @@ class Game:
 
         return True
 
-    def valid_moves(self, turn="") -> list:
+    def valid_moves(self, turn="") -> List:
         turn = turn if turn else self.turn
         if self._pieces_remaining[turn] == 0:
             return []
@@ -87,6 +102,9 @@ class Game:
     def game_over(self) -> bool:
         white_remaining = self._pieces_remaining["white"]
         black_remaining = self._pieces_remaining["black"]
+
+        if self.result == "abandoned":
+            return True
 
         if self._moves_since_take >= 40:
             self.result = "draw"
@@ -108,7 +126,7 @@ class Game:
             return False
 
     @staticmethod
-    def _parse_move(move: str) -> tuple:
+    def _parse_move(move: str) -> Tuple:
         if "-" not in move:
             return None, None
 
