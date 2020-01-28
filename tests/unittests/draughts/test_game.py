@@ -1,10 +1,9 @@
 from unittest import mock
 
 import numpy as np
-
 from alphadraughts.draughts.board import Board
 from alphadraughts.draughts.game import Game
-from alphadraughts.draughts.piece import EmptyPiece, Piece, King
+from alphadraughts.draughts.piece import EmptyPiece, King, Piece
 from tests.unittests.draughts.utils import new_board
 
 

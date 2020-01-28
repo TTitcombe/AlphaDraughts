@@ -13,7 +13,11 @@ The board game has been implemented. The AI is to follow.
 ### Requirements
 Alphadraughts has been developed with python 3.7, however other 3.x versions should work.
 
-Run `pip install -r requirements.txt` to install the packages needed to run the board game.
+Currently, alphadraughts can be installed via local pip installation. Clone the repo, navigate to it, and run:
+
+```bash
+pip install -e .
+```
 
 ### How to run
 Run `python -m scripts.play_game` to play a human-vs-human game. This script accepts user input

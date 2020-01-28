@@ -1,0 +1,15 @@
+name: alphadraughts
+channels:
+  - conda-forge
+dependencies:
+  - python=3.7.*
+  - black
+  - pytype
+  - pytest
+  - numpy
+  - isort
+  - matplotlib
+  - pre-commit
+  - pip >= 19
+  - pip:
+      - -e .

@@ -8,9 +8,8 @@ jobs:
     - stage: "Code analysis"
       name: "Code formatting and type checking"
       install:
-        - pip install black pytype
+        - pip install black
       script:
-       - pytype --keep-going alphadraughts
        - black --check alphadraughts/
     - stage: "Testing"
       name: "unit testing"
