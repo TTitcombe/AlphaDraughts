@@ -1,4 +1,5 @@
 import numpy as np
+
 from alphadraughts.draughts.board import Board
 from alphadraughts.draughts.enums import Direction
 from alphadraughts.draughts.piece import EmptyPiece, King, Piece

@@ -1,4 +1,5 @@
 import numpy as np
+
 from alphadraughts.draughts.piece import EmptyPiece, Piece
 
 new_board = np.array(
