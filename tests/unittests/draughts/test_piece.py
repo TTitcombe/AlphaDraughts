@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+
 from alphadraughts.draughts.enums import Direction
 from alphadraughts.draughts.piece import EmptyPiece, King, Piece
 

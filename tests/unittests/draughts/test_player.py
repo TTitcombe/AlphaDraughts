@@ -1,15 +1,15 @@
 import pytest
 
-from alphadraughts.draughts.players import BasePlayer
+from alphadraughts.draughts.players import BasePlayer, HumanPlayer
 
 
 class TestBasePlayer:
     def test_that_win_rate_default_to_zero(self):
-        player = BasePlayer()
+        player = HumanPlayer("test")
         assert player.win_rate == 0.0
 
     def test_that_win_rate_is_wins_over_games_played(self):
-        player = BasePlayer()
+        player = HumanPlayer("test")
         player.wins = 10
         assert player.win_rate == 1.0
 

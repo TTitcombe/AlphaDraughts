@@ -1,12 +1,18 @@
+from abc import ABC, abstractmethod
+
 from .enums import Direction
 
 
-class BasePiece:
+class BasePiece(ABC):
     BOARD_REPRESENTATION = None
     PRINT_REPRESENTATION = None
 
+    @abstractmethod
     def move(self, _):
-        raise NotImplementedError
+        pass
+
+    def __str__(self):
+        return self.PRINT_REPRESENTATION
 
 
 class EmptyPiece(BasePiece):
@@ -18,9 +24,6 @@ class EmptyPiece(BasePiece):
 
     def move(self, _):
         return False
-
-    def __str__(self):
-        return "-"
 
     def __eq__(self, other):
         if isinstance(other, EmptyPiece):
@@ -74,6 +77,7 @@ class Piece(BasePiece):
 
 class King(Piece):
     def move(self, move: str) -> bool:
+        # Any valid board move is a valid King move. Do validation such as 'jump' move (taking a piece) on the board
         return True
 
     def __str__(self):

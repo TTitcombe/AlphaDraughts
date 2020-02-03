@@ -8,7 +8,7 @@ jobs:
     - stage: "Code analysis"
       name: "Code formatting and type checking"
       install:
-        - pip install black
+        - pip install black isort
       script:
        - black --check alphadraughts/
     - stage: "Testing"
